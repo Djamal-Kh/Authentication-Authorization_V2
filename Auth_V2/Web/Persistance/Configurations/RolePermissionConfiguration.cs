@@ -1,0 +1,37 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Web.Domain;
+using Web.Persistance.Entities;
+using Web.Auth;
+
+namespace Web.Persistance.Configurations;
+
+public partial class RolePermissionConfiguration
+    : IEntityTypeConfiguration<RolePermissionEntity>
+{
+    private readonly AuthorizationOptions _authorization;
+
+    public RolePermissionConfiguration(AuthorizationOptions authorization)
+    {
+        _authorization = authorization;
+    }
+
+    public void Configure(EntityTypeBuilder<RolePermissionEntity> builder)
+    {
+        builder.HasKey(r => new { r.RoleId, r.PermissionId });
+
+        builder.HasData(ParseRolePermissions());
+    }
+
+    private RolePermissionEntity[] ParseRolePermissions()
+    {
+        return _authorization.RolePermissions
+            .SelectMany(rp => rp.Permissions
+                .Select(p => new RolePermissionEntity
+                {
+                    RoleId = (int)Enum.Parse<EnumRole>(rp.Role),
+                    PermissionId = (int)Enum.Parse<EnumPermission>(p)
+                }))
+            .ToArray();
+    }
+}

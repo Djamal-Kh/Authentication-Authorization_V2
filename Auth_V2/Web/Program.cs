@@ -24,6 +24,7 @@ services.AddScoped<UserRepository>();
 services.AddScoped<UserService>();
 
 services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
+services.Configure<AuthorizationOptions>(builder.Configuration.GetSection(nameof(AuthorizationOptions)));
 
 services.AddApiAuthentication(builder.Configuration);
 
