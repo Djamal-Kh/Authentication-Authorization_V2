@@ -1,4 +1,6 @@
-﻿using Web.Dto;
+﻿using Web.Auth;
+using Web.Domain;
+using Web.Dto;
 using Web.Services;
 
 namespace Web.Endpoints;
@@ -12,8 +14,14 @@ public static class UserEndpoints
         app.MapPost("login", Login);
 
         app.MapGet("email", GetByEmail)
-            .RequireAuthorization();
+            .RequireAuthorization(policy => policy.AddRequirements(new PermissionRequirement(
+                [EnumPermission.Read])));
 
+        app.MapPost("email", () =>
+        {
+            return TypedResults.Ok("ok");
+        }).RequirePermissions(EnumPermission.Create);
+        
         return app;
     }
 

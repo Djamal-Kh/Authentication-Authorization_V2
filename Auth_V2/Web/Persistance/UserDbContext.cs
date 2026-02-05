@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Web.Auth;
 using Web.Domain;
 using Web.Persistance.Configurations;
+using Web.Persistance.Entities;
 
 namespace Web.Persistance;
 
@@ -11,7 +12,9 @@ public class UserDbContext(
     IOptions<AuthorizationOptions> authOptions) : DbContext(options)
 {
     
-    public DbSet<User> Users { get; set; }
+    public DbSet<UserEntity> Users { get; set; }
+    
+    public DbSet<RoleEntity> Roles { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
