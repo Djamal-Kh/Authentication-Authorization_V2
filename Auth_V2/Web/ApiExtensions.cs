@@ -1,8 +1,12 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Web.Auth;
+using Web.Domain;
+using Web.Persistance;
+using Web.Services;
 
 namespace Web;
 
@@ -38,6 +42,20 @@ public static class ApiExtensions
                 };
             });
 
+        services.AddScoped<JwtProvider>();
+        services.AddScoped<PasswordHasher>();
+        services.AddScoped<UserRepository>();
+        services.AddScoped<UserService>();
+        services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
         services.AddAuthorization();
+    }
+    
+    public static IEndpointConventionBuilder RequirePermissions<TBuilder>(
+        this TBuilder builder, params EnumPermission[] permissions)
+        where TBuilder : IEndpointConventionBuilder
+    {
+        return builder
+            .RequireAuthorization(pb =>
+                pb.AddRequirements(new PermissionRequirement(permissions)));
     }
 }

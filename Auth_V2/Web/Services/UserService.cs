@@ -40,6 +40,7 @@ public class UserService
         return token;
     }
     
-    public async Task<User> GetByEmail(string email) =>
+    public async Task<UserEntity> GetByEmail(string email) =>
         await _userRepository.GetByEmail(email);
+    
 }

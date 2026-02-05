@@ -1,4 +1,5 @@
-﻿namespace Web.Persistance.Entities;
+﻿
+using Web.Persistance.Entities;
 
 public class UserEntity
 {

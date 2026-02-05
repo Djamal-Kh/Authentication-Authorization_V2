@@ -17,7 +17,7 @@ public class JwtProvider
         _options = options.Value;
     }
 
-    public string GenerateToken(User user)
+    public string GenerateToken(UserEntity user)
     {
         Claim[] claims = [new("userId", user.Id.ToString())];
         
